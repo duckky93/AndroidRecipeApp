@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">AndroidRecipeApp</string>
+
+    <string name="empty_message_error">Please fill the inputs.</string>
+    <string name="update">Update</string>
+    <string name="create">Create</string>
 </resources>

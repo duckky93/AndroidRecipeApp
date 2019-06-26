@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class Recipe implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
 
     @ColumnInfo(name = "category_id")
     private int categoryId;
@@ -21,14 +21,14 @@ public class Recipe implements Serializable {
     @ColumnInfo(name = "recipe_content")
     private String recipeContent;
 
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    @ColumnInfo(name = "recipe_image", typeAffinity = ColumnInfo.BLOB)
     private byte[] image;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

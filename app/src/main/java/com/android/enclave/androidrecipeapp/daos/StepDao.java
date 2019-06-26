@@ -14,10 +14,10 @@ import java.util.List;
 public interface StepDao {
 
     @Query("SELECT * from step WHERE recipe_id = :recipeId")
-    List<Step> getAll(int recipeId);
+    List<Step> getAll(long recipeId);
 
     @Insert
-    void insert(Step step);
+    long insert(Step step);
 
     @Delete
     void delete(Step step);

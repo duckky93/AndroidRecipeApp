@@ -48,6 +48,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
+    public void deleteRecipe(Recipe recipe, int position){
+        this.recipes.remove(position);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position == recipes.size()) {
@@ -81,21 +86,33 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public void onBindViewHolder(@NonNull RecipeViewHolder recipeViewHolder, int i) {
-        Recipe recipe = recipes.get(i);
+    public void onBindViewHolder(@NonNull RecipeViewHolder recipeViewHolder, final int i) {
+        final Recipe recipe = recipes.get(i);
         if (recipe.getImage() != null) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inDither = false;
-            options.inPurgeable = true;
-            options.inInputShareable = true;
-            options.inTempStorage = new byte[1024 * 32];
-
-            Bitmap bm = BitmapFactory.decodeByteArray(recipe.getImage(), 0, recipe.getImage().length, options);
+            Bitmap bm = BitmapFactory.decodeByteArray(recipe.getImage(), 0, recipe.getImage().length);
             recipeViewHolder.ivRecipeBackground.setImageBitmap(bm);
         } else {
             recipeViewHolder.ivRecipeBackground.setImageResource(R.drawable.foodplaceholder);
         }
         recipeViewHolder.tvRecipeName.setText(recipe.getRecipeName());
+        recipeViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onRecipeClickListener(recipe);
+                }
+            }
+        });
+
+        recipeViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (listener != null) {
+                    listener.onRecipeLongClickListener(recipe, i);
+                }
+                return false;
+            }
+        });
     }
 
     public void onBindViewHolder(@NonNull AddNewViewHolder addNewViewHolder, int i) {
@@ -138,6 +155,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface RecipeListener {
         void onRecipeClickListener(Recipe recipe);
+
+        void onRecipeLongClickListener(Recipe recipe, int position);
 
         void onClickNewRecipeListener();
     }

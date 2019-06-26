@@ -6,25 +6,28 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.android.enclave.androidrecipeapp.entities.Gredient;
+import com.android.enclave.androidrecipeapp.entities.Ingredient;
 
 import java.util.List;
 
 @Dao
 public interface GredientDao {
 
-    @Query("SELECT * from gredients")
-    List<Gredient> getAll();
+    @Query("SELECT * from ingredients")
+    List<Ingredient> getAll();
 
-    @Query("SELECT * from gredients WHERE id IN (:gredientIds)")
-    List<Gredient> getAll(int[] gredientIds);
+    @Query("SELECT * from ingredients WHERE id = :ingredientId")
+    List<Ingredient> getAll(int ingredientId);
+
+    @Query("SELECT * from ingredients WHERE recipe_id = :recipeId")
+    List<Ingredient> getAllByRecipeId(long recipeId);
 
     @Insert
-    void insert(Gredient gredient);
+    long insert(Ingredient ingredient);
 
     @Delete
-    void delete(Gredient gredient);
+    void delete(Ingredient ingredient);
 
     @Update
-    void update(Gredient gredient);
+    void update(Ingredient ingredient);
 }

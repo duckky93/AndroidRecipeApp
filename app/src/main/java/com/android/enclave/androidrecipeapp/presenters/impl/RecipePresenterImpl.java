@@ -8,7 +8,7 @@ import com.android.enclave.androidrecipeapp.database.AppDatabase;
 import com.android.enclave.androidrecipeapp.entities.Category;
 import com.android.enclave.androidrecipeapp.entities.Recipe;
 import com.android.enclave.androidrecipeapp.presenters.BasePresenter;
-import com.android.enclave.androidrecipeapp.presenters.RecipePresenter;
+import com.android.enclave.androidrecipeapp.presenters.IRecipePresenter;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipePresenterImpl extends BasePresenter implements RecipePresenter {
+public class RecipePresenterImpl extends BasePresenter implements IRecipePresenter {
 
     private RecipeView view;
     private AppDatabase appDatabase;
@@ -87,18 +87,20 @@ public class RecipePresenterImpl extends BasePresenter implements RecipePresente
 
     @Override
     public void getRecipe(int categoryId) {
-        int[] categoryIds = new int[categoryId];
-        List<Recipe> recipes = appDatabase.recipeDao().getAll(categoryIds);
+        List<Recipe> recipes = appDatabase.recipeDao().getAll(categoryId);
         view.onLoadRecipes(recipes);
     }
 
     @Override
-    public void deleteRecipe(Recipe recipe) {
-
+    public void deleteRecipe(Recipe recipe, int position) {
+        appDatabase.recipeDao().delete(recipe);
+        view.onRecipeDeleted(recipe, position);
     }
 
     public interface RecipeView {
         void onLoadRecipes(List<Recipe> recipes);
+
+        void onRecipeDeleted(Recipe recipe, int position);
 
         void updateCategories(ArrayList<Category> categories);
     }

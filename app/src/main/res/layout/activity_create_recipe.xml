@@ -4,70 +4,182 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateRecipeActivity">
+    tools:context=".CreateUpdateRecipeActivity">
 
-    <LinearLayout
-        android:id="@+id/recipe_name_container"
-        android:layout_margin="@dimen/margin_large"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@id/gbottom"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:textColor="@color/textWhite"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:labelFor="@+id/ed_recipe_name"
-            android:text="Recipe Name" />
+            android:background="@android:color/transparent">
 
-        <EditText
-            android:id="@+id/ed_recipe_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/ed_recipe_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_recipe_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_recipe_height"
+                android:scaleType="centerCrop"
+                android:src="@drawable/foodplaceholder"
+                app:layout_constraintBottom_toTopOf="@id/recipe_name_container"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/recipe_description_container"
-        android:layout_margin="@dimen/margin_large"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipe_name_container">
+            <LinearLayout
+                android:id="@+id/recipe_name_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_large"
+                android:background="@drawable/layout_bg"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_recipe_image">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:labelFor="@+id/ed_recipe_description"
-            android:textColor="@color/textWhite"
-            android:text="Recipe Description" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:labelFor="@+id/ed_recipe_name"
+                    android:text="Recipe Name"
+                    android:textColor="@color/textWhite"
+                    android:textSize="@dimen/text_size_header"
+                    android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/ed_recipe_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/ed_recipe_name"
-            android:minLines="3"
-            android:inputType="textMultiLine"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </LinearLayout>
+                <EditText
+                    android:id="@+id/ed_recipe_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/ed_recipe_name"
+                    android:textSize="@dimen/text_size_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/recipe_description_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_large"
+                android:background="@drawable/layout_bg"
+                android:gravity="top|left"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipe_name_container">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:labelFor="@+id/ed_recipe_description"
+                    android:text="Recipe Description"
+                    android:textColor="@color/textWhite"
+                    android:textSize="@dimen/text_size_header"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/ed_recipe_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:gravity="top|left"
+                    android:labelFor="@id/ed_recipe_name"
+                    android:minLines="3"
+                    android:textSize="@dimen/text_size_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/ingredient_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_large"
+                android:background="@drawable/layout_bg"
+                android:padding="@dimen/margin_large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipe_description_container">
+
+                <TextView
+                    android:id="@+id/lb_ingredient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:text="Ingredients"
+                    android:textColor="@color/textWhite"
+                    android:textSize="@dimen/text_size_header"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rcv_ingredient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lb_ingredient"></android.support.v7.widget.RecyclerView>
+            </android.support.constraint.ConstraintLayout>
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/step_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_large"
+                android:background="@drawable/layout_bg"
+                android:padding="@dimen/margin_large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ingredient_container">
+
+                <TextView
+                    android:id="@+id/lb_step"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:text="Steps"
+                    android:textColor="@color/textWhite"
+                    android:textSize="@dimen/text_size_header"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rcv_step"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lb_step"></android.support.v7.widget.RecyclerView>
+            </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <android.support.constraint.Guideline
         android:id="@+id/gbottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85" />
+        app:layout_constraintGuide_percent="0.9" />
 
     <Button
         android:id="@+id/bt_cancel"
@@ -78,7 +190,7 @@
         android:layout_marginBottom="8dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bt_create"
+        app:layout_constraintEnd_toStartOf="@id/bt_create"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/gbottom" />
 

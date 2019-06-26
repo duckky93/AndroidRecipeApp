@@ -2,7 +2,6 @@ package com.android.enclave.androidrecipeapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,9 +11,11 @@ import android.widget.Toast;
 
 import com.android.enclave.androidrecipeapp.adapters.CategorySpinnerAdapter;
 import com.android.enclave.androidrecipeapp.adapters.RecipeAdapter;
+import com.android.enclave.androidrecipeapp.constant.AppConstants;
 import com.android.enclave.androidrecipeapp.entities.Category;
 import com.android.enclave.androidrecipeapp.entities.Recipe;
-import com.android.enclave.androidrecipeapp.presenters.RecipePresenter;
+import com.android.enclave.androidrecipeapp.fragments.BottomSheetFragment;
+import com.android.enclave.androidrecipeapp.presenters.IRecipePresenter;
 import com.android.enclave.androidrecipeapp.presenters.impl.RecipePresenterImpl;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import butterknife.BindView;
 public class RecipeListActivity extends BaseActivity implements RecipePresenterImpl.RecipeView {
 
     private final static int REQUEST_CREATE_CODE = 1;
+    private final static int REQUEST_UPDATE_CODE = 2;
 
     @Override
     int getContentView() {
@@ -37,27 +39,45 @@ public class RecipeListActivity extends BaseActivity implements RecipePresenterI
     @BindView(R.id.rcv_recipe)
     RecyclerView rcvRecipe;
 
-    private RecipePresenter presenter;
+    private IRecipePresenter presenter;
     private RecipeAdapter recipeAdapter;
     private Category category;
-    CategorySpinnerAdapter categorySpinnerAdapter;
+    private CategorySpinnerAdapter categorySpinnerAdapter;
+    private BottomSheetFragment bottomSheetFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new RecipePresenterImpl(getApplication(), this);
         recipeAdapter = new RecipeAdapter(getApplicationContext());
+
+        bottomSheetFragment = new BottomSheetFragment();
         recipeAdapter.setListener(new RecipeAdapter.RecipeListener() {
             @Override
             public void onRecipeClickListener(Recipe recipe) {
+                Intent intent = new Intent(RecipeListActivity.this, CreateUpdateRecipeActivity.class);
+                intent.putExtra(AppConstants.CATEGORY, category);
+                intent.putExtra(AppConstants.RECIPE, recipe);
+                startActivity(intent);
+            }
 
+            @Override
+            public void onRecipeLongClickListener(final Recipe recipe, final int position) {
+                bottomSheetFragment.show(getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
+                bottomSheetFragment.setListener(new BottomSheetFragment.BottomSheetListener() {
+                    @Override
+                    public void onBottomSheetClickListener() {
+                        presenter.deleteRecipe(recipe, position);
+                    }
+                });
             }
 
             @Override
             public void onClickNewRecipeListener() {
                 Toast.makeText(getApplicationContext(), category.getName(), Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(), CreateRecipeActivity.class);
-                startActivityForResult(intent,REQUEST_CREATE_CODE);
+                Intent intent = new Intent(RecipeListActivity.this, CreateUpdateRecipeActivity.class);
+                intent.putExtra(AppConstants.CATEGORY, category);
+                startActivity(intent);
             }
         });
 
@@ -67,9 +87,9 @@ public class RecipeListActivity extends BaseActivity implements RecipePresenterI
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == REQUEST_CREATE_CODE){
+    protected void onResume() {
+        super.onResume();
+        if(category!=null){
             presenter.getRecipe(category.getId());
         }
     }
@@ -77,6 +97,11 @@ public class RecipeListActivity extends BaseActivity implements RecipePresenterI
     @Override
     public void onLoadRecipes(List<Recipe> recipes) {
         recipeAdapter.setRecipes(recipes);
+    }
+
+    @Override
+    public void onRecipeDeleted(Recipe recipe, int position) {
+        recipeAdapter.deleteRecipe(recipe, position);
     }
 
     @Override
@@ -92,7 +117,7 @@ public class RecipeListActivity extends BaseActivity implements RecipePresenterI
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                presenter.getRecipe(category.getId());
             }
         });
     }

@@ -6,8 +6,8 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "step")
-public class Step implements Serializable {
+@Entity(tableName = "ingredients")
+public class Ingredient implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -15,11 +15,11 @@ public class Step implements Serializable {
     @ColumnInfo(name = "recipe_id")
     private long recipeId;
 
-    @ColumnInfo(name = "step_number")
-    private String stepName;
+    @ColumnInfo(name = "gredient_name")
+    private String name;
 
-    @ColumnInfo(name = "step_description")
-    private String stepDescription;
+    @ColumnInfo(name = "gredient_quantity")
+    private String quantity;
 
     public long getId() {
         return id;
@@ -37,19 +37,19 @@ public class Step implements Serializable {
         this.recipeId = recipeId;
     }
 
-    public String getStepName() {
-        return stepName;
+    public String getName() {
+        return name;
     }
 
-    public void setStepName(String stepName) {
-        this.stepName = stepName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getStepDescription() {
-        return stepDescription;
+    public String getQuantity() {
+        return quantity;
     }
 
-    public void setStepDescription(String stepDescription) {
-        this.stepDescription = stepDescription;
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
     }
 }

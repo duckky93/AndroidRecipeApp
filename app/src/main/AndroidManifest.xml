@@ -19,11 +19,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RecipeListActivity"
-            android:theme="@style/MainTheme" />
+            android:name=".RecipeListActivity" />
         <activity
-            android:name=".CreateRecipeActivity"
-            android:theme="@style/MainTheme"></activity>
+            android:name=".CreateUpdateRecipeActivity"></activity>
     </application>
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 </manifest>

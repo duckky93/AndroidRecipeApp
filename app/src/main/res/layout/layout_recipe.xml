@@ -16,7 +16,7 @@
         android:textStyle="bold"
         android:text="Fast Food"
         android:textColor="@color/textWhite"
-        android:textSize="@dimen/text_size_title"
+        android:textSize="@dimen/text_size_big"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

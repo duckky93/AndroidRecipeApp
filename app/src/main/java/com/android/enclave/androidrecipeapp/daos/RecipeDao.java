@@ -19,8 +19,11 @@ public interface RecipeDao {
     @Query("SELECT * from recipes where category_id IN (:categoryIds)")
     List<Recipe> getAll(int[] categoryIds);
 
+    @Query("SELECT * from recipes where category_id = :categoryId")
+    List<Recipe> getAll(int categoryId);
+
     @Insert
-    void insert(Recipe recipe);
+    long insert(Recipe recipe);
 
     @Delete
     void delete(Recipe recipe);
