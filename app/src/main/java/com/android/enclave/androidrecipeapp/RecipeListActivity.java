@@ -74,7 +74,6 @@ public class RecipeListActivity extends BaseActivity implements RecipePresenterI
 
             @Override
             public void onClickNewRecipeListener() {
-                Toast.makeText(getApplicationContext(), category.getName(), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(RecipeListActivity.this, CreateUpdateRecipeActivity.class);
                 intent.putExtra(AppConstants.CATEGORY, category);
                 startActivity(intent);
