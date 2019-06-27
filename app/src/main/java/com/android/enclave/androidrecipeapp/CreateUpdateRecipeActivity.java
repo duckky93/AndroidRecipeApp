@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.android.enclave.androidrecipeapp.entities.Step;
 import com.android.enclave.androidrecipeapp.fragments.BottomSheetFragment;
 import com.android.enclave.androidrecipeapp.presenters.ICreateUpdateRecipePresenter;
 import com.android.enclave.androidrecipeapp.presenters.impl.CreateUpdateRecipePresenterImpl;
+import com.android.enclave.androidrecipeapp.utils.Helpers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,6 +49,9 @@ public class CreateUpdateRecipeActivity extends BaseActivity implements Ingredie
     int getContentView() {
         return R.layout.activity_create_recipe;
     }
+
+    @BindView(R.id.scroll_view)
+    NestedScrollView scrollView;
 
     @BindView(R.id.iv_recipe_image)
     ImageView ivRecipeImage;
@@ -115,13 +120,23 @@ public class CreateUpdateRecipeActivity extends BaseActivity implements Ingredie
             presenter.getSteps(recipe.getId());
         }
 
-        stepContainer.setVisibility(recipe != null ? View.VISIBLE : View.GONE);
-        ingredientContainer.setVisibility(recipe != null ? View.VISIBLE : View.GONE);
-        btnCreateUpdate.setText(getString(recipe != null ? R.string.update : R.string.create));
+        updateVisibleContainers();
         rcvIngredient.setLayoutManager(new LinearLayoutManager(this));
         rcvIngredient.setAdapter(ingredientAdapter);
         rcvStep.setLayoutManager(new LinearLayoutManager(this));
         rcvStep.setAdapter(stepAdapter);
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView nestedScrollView, int i, int i1, int i2, int i3) {
+                Helpers.hideKeyboard(CreateUpdateRecipeActivity.this);
+            }
+        });
+    }
+
+    private void updateVisibleContainers(){
+        stepContainer.setVisibility(recipe != null ? View.VISIBLE : View.GONE);
+        ingredientContainer.setVisibility(recipe != null ? View.VISIBLE : View.GONE);
+        btnCreateUpdate.setText(getString(recipe != null ? R.string.update : R.string.create));
     }
 
     @Override
@@ -133,6 +148,7 @@ public class CreateUpdateRecipeActivity extends BaseActivity implements Ingredie
             try {
                 Bitmap bitmap =
                         MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                bitmap = Helpers.getResizedBitmap(bitmap, 400);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 imageBytes = stream.toByteArray();
@@ -140,6 +156,32 @@ public class CreateUpdateRecipeActivity extends BaseActivity implements Ingredie
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        recipe = (Recipe) savedInstanceState.getSerializable(AppConstants.RECIPE);
+        if (recipe != null) {
+            if (recipe.getImage() != null) {
+                imageBytes = recipe.getImage();
+                Bitmap bmp = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                ivRecipeImage.setImageBitmap(bmp);
+            }
+            edRecipeName.setText(recipe.getRecipeName());
+            edRecipeDescription.setText(recipe.getRecipeContent());
+            presenter.getIngredients(recipe.getId());
+            presenter.getSteps(recipe.getId());
+        }
+        updateVisibleContainers();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (recipe != null) {
+            outState.putSerializable(AppConstants.RECIPE, recipe);
         }
     }
 
@@ -242,9 +284,7 @@ public class CreateUpdateRecipeActivity extends BaseActivity implements Ingredie
     @Override
     public void onRecipeCreated(Recipe recipe) {
         this.recipe = recipe;
-        stepContainer.setVisibility(recipe != null ? View.VISIBLE : View.GONE);
-        ingredientContainer.setVisibility(recipe != null ? View.VISIBLE : View.GONE);
-        btnCreateUpdate.setText(getString(recipe != null ? R.string.update : R.string.create));
+        updateVisibleContainers();
     }
 
     @Override
