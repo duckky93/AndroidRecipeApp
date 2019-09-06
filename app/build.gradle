@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    def abc = "abc"
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.android.enclave.androidrecipeapp"
